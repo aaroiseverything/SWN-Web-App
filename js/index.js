@@ -81,6 +81,8 @@ function googleLogin(){
 		console.log("Google Authentication Failed");
 	  });
 }
+function tosignuppage(){window.location.href = "signup.html";}
+function tosigninpage(){window.location.href = "signin.html";}
 function logout(){
 	firebase.auth().signOut();
 	window.location.href = "signin.html";
