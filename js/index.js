@@ -83,6 +83,7 @@ function googleLogin(){
 }
 function tosignuppage(){window.location.href = "signup.html";}
 function tosigninpage(){window.location.href = "signin.html";}
+function toexercise1(){window.location.href = "exercise1.html";}
 function logout(){
 	firebase.auth().signOut();
 	window.location.href = "signin.html";

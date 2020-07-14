@@ -1,0 +1,102 @@
+<html>
+     <head>
+          <title>Second Wind Nation Exercise Home</title>
+          <link href="https://fonts.googleapis.com/css?family=Roboto:400,600" rel='stylesheet'/>
+          <link rel='stylesheet' href="css/style.css"/>
+     </head>
+     <div class="logo"><img src="img/Second_Wind_Nation-05.jpg" height=60 width=228/></div>
+
+     <body>
+          <div id="login_div" class="main-div">
+               <img src="img/Second_Wind_Logo_boxed.jpg" height=100 width=100/>
+               <h2>Today's workout</h2>
+               <ul style="list-style-type:none;" id="workoutlist">
+                    
+               </ul>  
+               <button onclick="startWorkout()">Start Workout</button>
+          </div>
+     
+
+          <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+          <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js"></script>
+          <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-database.js"></script>
+          <script>
+          var firebaseConfig = {
+               apiKey: "AIzaSyDedSAHGDBOqZTne15ZESnDADBlD3p2PnU",
+               authDomain: "secondwind-android-7708e.firebaseapp.com",
+               databaseURL: "https://secondwind-android-7708e.firebaseio.com",
+               projectId: "secondwind-android-7708e",
+               storageBucket: "secondwind-android-7708e.appspot.com",
+               messagingSenderId: "1015199228918",
+               appId: "1:1015199228918:web:ac4144564613bf322addd7"
+             };
+             firebase.initializeApp(firebaseConfig);
+          </script> 
+          <script src="js/index.js"></script>
+          <script>
+               //Getting current user id
+               var currentUserid = '';
+               firebase.auth().onAuthStateChanged(function(user) {
+                    if (user != null) {
+                         this.name = user.displayName;
+                         currentUserid = user.uid;
+                         var lastWorkout = '';
+                         var workoutFocus = [];
+                         var workoutDict = {};
+                         var database = firebase.database();
+                         database.ref("Members/"+currentUserid).once('value', function(snapshot){
+                              if(snapshot.exists()){
+                                   lastWorkout = snapshot.val().lastWorkout;
+                                   workoutFocus += (snapshot.val().workoutFocus);
+                                   //window.alert(workoutFocus.includes("Core"));
+                              }
+                              if (workoutFocus.includes("Core") && parseInt(lastWorkout)%2==0){
+                                   getSet("Core",lastWorkout);
+                                   window.alert("snapshot.val().name");
+                              } else if (workoutFocus.includes("Upper") && parseInt(lastWorkout)%2==1){
+                                   getSet("UpperBody",lastWorkout);
+                              }else if (workoutFocus.includes("Lower") && parseInt(lastWorkout)%2==1){
+                                   getSet("LowerBody",lastWorkout);
+                              }else {getSet("LowerBody",lastWorkout); }
+                         });
+                         function getSet(type, last){
+                              workoutDict= {};
+                              workoutNameRepDesc = {};
+                              var database = firebase.database();               
+                              database.ref("Workouts/"+type+"/Set"+(Math.floor(last/2)+1).toString()+"/").once('value', function(snapshot){
+                                   if(snapshot.exists()){
+                                        var counter = 0;
+                                        snapshot.forEach(function(data){
+                                             workoutNameRepDesc.name = data.val().name;
+                                             workoutNameRepDesc.rep = data.val().rep;
+                                             if(data.val().desc){
+                                                  workoutNameRepDesc.desc = data.val().desc;
+                                             }else{workoutNameRepDesc.desc = '';}
+                                             workoutDict.counter = workoutNameRepDesc;
+                                             counter +=1;
+                                             // window.alert("fgh"+workoutDict);
+                                        });
+                                        window.alert("fgh"+workoutDict);
+
+                                   }else{
+                                        window.alert("Workout does not exist yet");
+                                   }
+                              });
+                         }
+                    } 
+               });
+               var database = firebase.database();               
+               database.ref("Workouts/Core/Set1/1").once('value', function(snapshot){
+                   if(snapshot.exists()){
+                       var content = '';
+                       snapshot.forEach(function(data){
+                           var val = data.val();
+                           //window.alert(val);
+                           content += '<li>' + val+ '</li>';
+                       });
+                       $('#workoutlist').append(content);
+                   }
+               });
+           </script>
+     </body>
+</html>
