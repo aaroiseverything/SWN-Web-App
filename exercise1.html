@@ -85,6 +85,7 @@
                          }
                     } 
                });
+               ///can remove this part later
                var database = firebase.database();               
                database.ref("Workouts/Core/Set1/1").once('value', function(snapshot){
                    if(snapshot.exists()){
