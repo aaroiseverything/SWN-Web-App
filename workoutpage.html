@@ -1,0 +1,46 @@
+
+
+<html>
+    <head>
+         <title>Second Wind Nation Home Page</title>
+         <link href="https://fonts.googleapis.com/css?family=Roboto:400,600" rel='stylesheet'/>
+         <link rel='stylesheet' href="css/style.css"/>
+    </head>
+    <div class="logo"><img src="img/Second_Wind_Nation-05.jpg" height=60 width=228/></div>
+
+    <body>
+         
+         <div id="user_div" class="loggedin-div">
+              <h2>Workout Page</h2>
+              <img src="img/test.jpg" onclick="toexercise1()" height=160 width=228>
+              <button onclick="logout()">Logout</button>
+              <button onclick="toexercise1()">My Workout</button>
+         </div>
+
+         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js"></script>
+         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-database.js"></script>
+         <script>
+         var firebaseConfig = {
+              apiKey: "AIzaSyDedSAHGDBOqZTne15ZESnDADBlD3p2PnU",
+              authDomain: "secondwind-android-7708e.firebaseapp.com",
+              databaseURL: "https://secondwind-android-7708e.firebaseio.com",
+              projectId: "secondwind-android-7708e",
+              storageBucket: "secondwind-android-7708e.appspot.com",
+              messagingSenderId: "1015199228918",
+              appId: "1:1015199228918:web:ac4144564613bf322addd7"
+            };
+         
+            firebase.initializeApp(firebaseConfig);
+         </script> 
+         <script src="js/index.js"></script>
+         <script>
+            firebase.auth().onAuthStateChanged(function(user) {
+                 if (user==false) {
+                      window.location.href = "signin.html";
+                 } 
+            });
+         </script>
+
+    </body>
+</html>

@@ -17,7 +17,7 @@ function signup(){
 			console.log(errorMessage);
 			window.alert("Message: "+errorMessage);
 		  });
-		window.location.href = "home.html";
+		window.location.href = "workoutpage.html";
 	}else{
 		window.alert("Incomplete form. Please fill out all the fields.");
 	}
@@ -39,7 +39,7 @@ function login(){
 	if(email != "" && password != ""){
 		var result = firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
 			window.alert("issuccess");
-			window.location.href = "home.html";
+			window.location.href = "workoutpage.html";
 		});
 		result.catch(function(error){
 			var errorCode = error.code;
@@ -65,7 +65,7 @@ function googleLogin(){
 				newMember(user.uid, user.displayName, user.email);
 				
 			}
-			window.location.href = "home.html";
+			window.location.href = "workoutpage.html";
 		});
 		console.log(result);
 		console.log("Success, Google Account Linked!");

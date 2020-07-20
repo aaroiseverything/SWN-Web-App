@@ -1,3 +1,27 @@
+body{
+    margin:0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Poppins',sans-serif;
+}
+
+.calendar{
+    width: 300px;
+    height: auto;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.calendar .date{
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(25px,1fr));
+    grid-gap: 10px;
+    box-sizing: border-box;
+}
+
 .logo{
     position: absolute;
     width: 328px;
@@ -57,4 +81,5 @@ input,button{
     border: 1px solid #5d8ffc;
     cursor: pointer;
 }
+
 

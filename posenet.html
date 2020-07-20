@@ -5,7 +5,7 @@
     <title>Second Wind Nation Exercise</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,600" rel='stylesheet'/>
     <link rel='stylesheet' href="css/style.css"/>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
     <div class="logo"><img src="img/Second_Wind_Nation-05.jpg" height=60 width=228/></div>
 
@@ -89,8 +89,8 @@
         <div class="sk-spinner sk-spinner-pulse"></div>
     </div>
     <div id="main" style="display: block;">
-        <video id="video" playsinline="" style="display: none;">
-        </video>
+        <video id="video" playsinline=""  autoplay></video>
+        <!-- <img id="video" src="img/test.jpg"> style="display: none;"-->
         <canvas id="output">
     </canvas>
 
@@ -120,14 +120,26 @@
              firebase.initializeApp(firebaseConfig);
           </script> 
           <script src="js/index.js"></script>
-    <script src="camera2.js"></script>
+          <script>
+              navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+              if(navigator.getUserMedia){
+                  navigator.getUserMedia({video:true},handlevideo, videoError);
+              }
+              function handlevideo(stream){
+                  document.querySelector('#video').srcObject=stream;
+              }
+              function videoError(){
+                  alert("Something is wrong");
+              }
+          </script>
+    <!-- <script src="camera2.js"></script> -->
 </body>
 <script>
     var imageScaleFactor = 0.5;
     var outputStride = 16;
     var flipHorizontal = false;
 
-    var imageElement = document.getElementById('video');
+    var imageElement = document.getElementById('main');
 
     posenet.load().then(function(net){
       return net.estimateSinglePose(imageElement, imageScaleFactor, flipHorizontal, outputStride)
