@@ -10,6 +10,10 @@ function istoday(day){
         return false;
     }
 }
+//this checks if month has 28/29/30/31 days
+const getDaysInMonth = date =>
+  new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+
 var positioninweek = parseInt(today)%7; //this is the position in SMTWTFS
 var num = 0;
 for (let i =0; i<=8; i++){
@@ -23,6 +27,9 @@ for (let i =0; i<=8; i++){
 for (let day = 1; day <= 31; day++ ){
     console.log(today);
     calendar.insertAdjacentHTML("beforeend", `<div class='number ${istoday(day)?"active":"" }'>${day}</div>`);
+    if(day == getDaysInMonth(new Date())){
+        break;
+    }
 }
 
 
