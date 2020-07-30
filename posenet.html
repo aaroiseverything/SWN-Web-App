@@ -147,5 +147,13 @@
       console.log(pose);
     })
   </script>
+  <script>
+    //check if user logged in
+      if (sessionStorage.getItem('status') != null){ 
+          //means user has logged in
+      }else{
+          logout();
+          window.alert("You are not logged in")}
+  </script>
 
 </html>

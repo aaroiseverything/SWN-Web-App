@@ -42,5 +42,9 @@
     "dev": "cd demos && yarn watch",
     "lint": "tslint -p . -t verbose"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@tensorflow/tfjs": "^2.0.1",
+    "@tensorflow/tfjs-node": "^2.0.1"
+  }
 }

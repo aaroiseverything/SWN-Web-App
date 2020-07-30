@@ -2,7 +2,7 @@
 
 <html>
     <head>
-         <title>Second Wind Nation Home Page</title>
+         <title>Second Wind Nation Workout Page</title>
          <link href="https://fonts.googleapis.com/css?family=Roboto:400,600" rel='stylesheet'/>
          <link rel='stylesheet' href="css/style.css"/>
     </head>
@@ -11,10 +11,14 @@
     <body>
          
          <div id="user_div" class="loggedin-div">
-              <h2>Workout Page</h2>
+              <h2>Analyse your exercise and running form to start generating workouts</h2>
+              <input type="text" placeholder="Search Exercise" id="search_field"/>
               <img src="img/test.jpg" onclick="toexercise1()" height=160 width=228>
+              <!-- <img src="img/cat.jpg" onclick="toexercise1()" height=160 width=228>
+              <img src="img/test.jpg" onclick="toexercise1()" height=160 width=228> -->
               <button onclick="logout()">Logout</button>
               <button onclick="toexercise1()">My Workout</button>
+              <button onclick="toprofilepage()">Update my Profile</button>
          </div>
 
          <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
@@ -41,6 +45,14 @@
                  } 
             });
          </script>
+         <script>
+          //check if user logged in
+            if (sessionStorage.getItem('status') != null){ 
+                //means user has logged in
+            }else{
+                logout();
+                window.alert("You are not logged in")}
+        </script>
 
     </body>
 </html>

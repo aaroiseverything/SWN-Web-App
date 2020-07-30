@@ -14,7 +14,7 @@
  * limitations under the License.
  * =============================================================================
  */
-import * as posenet from '@tensorflow-models/posenet';
+import * as posenet from '@tensorflow-models/posenet'; //-models/posenet
 import dat from 'dat.gui';
 import Stats from 'stats.js';
 
@@ -420,7 +420,149 @@ function detectPoseInRealTime(video, net) {
       ctx.restore();
     }
 
-    // For each pose (i.e. person) detected in an image, loop through the poses
+//Below is from Max's code from github https://github.com/Second-Wind-Nation/posenet-android-app/blob/master/org/tensorflow/lite/examples/posenet/PosenetActivity.kt
+//Removed List<Float> and .0f and changed toInt() to parseInt()
+function find_bodypart_xy(person, part_idx, widthRatio, heightRatio,left, top){
+	var x_y = [0, 0];
+	try {
+	var bodyPart = person.keyPoints[part_idx];
+	var position = bodyPart.position;
+	var bodyPartX = position.x.toFloat() * widthRatio + left;
+	var bodyPartY = position.y.toFloat() * heightRatio + top;
+
+	x_y = [bodyPartX, bodyPartY];
+
+	}catch (err){
+	Log.i(
+	"bodyPart",
+	"Cannot find body part"
+	)
+	}
+	return x_y
+}
+
+function analyze_squat_front(canvas, person){
+  
+      if (canvas.height > canvas.width) {
+        var screenWidth = canvas.width;
+        var screenHeight = canvas.width;
+        var left = 0;
+        var top = (canvas.height - canvas.width) / 2;
+      } else {
+        var screenWidth = canvas.height;
+        var screenHeight = canvas.height;
+        var left = (canvas.width - canvas.height) / 2;
+        var top = 0;
+      }
+      var right = left + screenWidth;
+      var bottom = top + screenHeight;
+  
+      var widthRatio = parseFloat(screenWidth) / MODEL_WIDTH;
+      var heightRatio = parseFloat(screenHeight) / MODEL_HEIGHT;
+  
+      // Get xy coordinates of keypoints of interest (ankle, knee hip)
+      var lhip_xy = find_bodypart_xy(person, 11, widthRatio, heightRatio, left, top);
+      var rhip_xy = find_bodypart_xy(person, 12, widthRatio, heightRatio, left, top);
+  
+      var lknee_xy = find_bodypart_xy(person, 13, widthRatio, heightRatio, left, top);
+      var rknee_xy = find_bodypart_xy(person, 14, widthRatio, heightRatio, left, top);
+  
+      var lankle_xy = find_bodypart_xy(person, 15, widthRatio, heightRatio, left, top);
+      var rankle_xy = find_bodypart_xy(person, 16, widthRatio, heightRatio, left, top);
+  
+      // range of knee angles that satisfy good squat depth
+      var squat_knee_angle_range = range(20,100);
+      // range of knee angles that imply standing position
+      var stand_knee_angle_range = range(160,190);
+  
+      // angle that left thigh makes with calf. To check for depth
+      var lknee_angle = get_angle(lknee_xy, lhip_xy, lankle_xy);
+      // angle that right thigh makes with calf
+      var rknee_angle = get_angle(rknee_xy, rhip_xy, rankle_xy);
+  
+      // offsets of knee from hip (to check for caving of knees)
+      var lknee_hip_offset = parseInt(lknee_xy[0] - lhip_xy[0]);
+      var rknee_hip_offset = parseInt(rhip_xy[0] - rknee_xy[0]);
+  
+      canvas.drawText(
+        "Left knee angle: %d".format(lknee_angle),
+        (10 * widthRatio),
+        (20 * heightRatio + top),
+        bodyPartCoordTextPaint
+      );
+      canvas.drawText(
+        "Right knee angle: %d".format(rknee_angle),
+        (10 * widthRatio),
+        (30 * heightRatio + top),
+        bodyPartCoordTextPaint
+      );
+      canvas.drawText(
+        "Left knee offset: %d".format(lknee_hip_offset),
+        (10 * widthRatio),
+        (40 * heightRatio + top),
+        bodyPartCoordTextPaint
+      );
+      canvas.drawText(
+        "Right knee offset: %d".format(rknee_hip_offset),
+        (10 * widthRatio),
+        (50 * heightRatio + top),
+        bodyPartCoordTextPaint
+      );
+      canvas.drawText(
+        "Knees caved-in count: %d".format(knees_caving_count),
+        (10 * widthRatio),
+        (60 * heightRatio + top),
+        bodyPartCoordTextPaint
+      );
+      canvas.drawText(
+        "Squat reps: %d".format(squat_reps),
+        (90 * widthRatio),
+        (20 * heightRatio + top),
+        squatTextPaint
+      );
+      // check if there are no instances of caving knees throughout motion
+      if(lknee_hip_offset >= -5 && rknee_hip_offset >= -5){
+        // if athlete achieves desired depth
+        if (lknee_angle in squat_knee_angle_range && rknee_angle in squat_knee_angle_range){
+          squatTextPaint.color = Color.GREEN;
+          canvas.drawText(
+            "Good!",
+            (70 * widthRatio),
+            (40 * heightRatio + top),
+            squatTextPaint
+          );
+          squat_down_flag = true;
+          knees_not_caving_flag = true;
+        }
+      } else{
+        // the moment caving knees are detected, flash on screen
+        squatTextPaint.color = Color.RED
+        canvas.drawText(
+          "KNEES CAVING IN!",
+          (70 * widthRatio),
+          (40 * heightRatio + top),
+          squatTextPaint
+        );
+        knees_not_caving_flag = false;
+        squat_down_flag = false;
+      }
+  
+      // if athlete is back to standing position
+      if (lknee_angle in stand_knee_angle_range && rknee_angle in stand_knee_angle_range){
+        // if athlete has achieved desired squat depth
+        if(squat_down_flag == true){
+          squat_down_flag = false;
+          squat_reps += 1;
+        }
+  
+        // if athlete was found to have knees caved in throughout motion
+        if(knees_not_caving_flag == false){
+          knees_caving_count += 1;
+          knees_not_caving_flag = true;
+        }
+      }
+    }
+    // For each pose (i.e. score) detected in an image, loop through the poses
     // and draw the resulting skeleton and keypoints if over certain confidence
     // scores
     poses.forEach(({score, keypoints}) => {
@@ -434,6 +576,9 @@ function detectPoseInRealTime(video, net) {
         if (guiState.output.showBoundingBox) {
           drawBoundingBox(keypoints, ctx);
         }
+        //TODO Associate this portion with a dropdown for user selection
+        console.log(keypoints[1]);
+        analyze_squat_front(canvas, poses)
       }
     });
 

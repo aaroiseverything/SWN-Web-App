@@ -1,0 +1,78 @@
+
+
+<html>
+    <head>
+         <title>Second Wind Nation Profile Page</title>
+         <link href="https://fonts.googleapis.com/css?family=Roboto:400,600" rel='stylesheet'/>
+         <link rel='stylesheet' href="css/style.css"/>
+    </head>
+    <div class="logo"><img src="img/Second_Wind_Nation-05.jpg" height=60 width=228/></div>
+
+    <body>
+         <div id="user_div" class="loggedin-div">
+              <h2>Update your profile</h2>
+              <input type="text" placeholder="First Name" id="firstname_field"/>
+              <input type="text" placeholder="Last Name" id="lastname_field"/>
+              <input type="text" placeholder="Email" id="email_field"/>
+              <input type="text" placeholder="Gender" id="gender_field"/>
+              <input type="text" placeholder="Username" id="username_field"/>
+              <input type="text" placeholder="Password" id="password_field"/>
+              <input type="text" placeholder="New Password" id="newpassword_field"/>
+              <input type="text" placeholder="Country" id="country_field"/>
+              <input type="text" placeholder="Address" id="address_field"/>
+              <input type="text" placeholder="City" id="city_field"/>
+              <input type="text" placeholder="State" id="state_field"/>
+              <input type="text" placeholder="ZipCode" id="zipcode_field"/>
+              <input type="text" placeholder="TimeZone" id="timezone_field"/>
+              <input type="text" placeholder="Phone Number" id="phone_field"/>
+              <input type="text" placeholder="Date Of Birth" id="dateofbirth_field"/>
+              <!-- To do: get profile picture from user -->
+              <!-- <input type="text" placeholder="Profile Picture" id="profilepicture_field"/> -->
+              <!-- <input type="text" placeholder="Affiliation Logo" id="logo_field"/> -->
+              <input type="text" placeholder="Weight in Kg" id="weight_field"/>
+              <input type="text" placeholder="Height in cm" id="height_field"/>
+              <input type="text" placeholder="Private/ Public Profile" id="privatepublic_field"/>
+              <!-- <input type="text" placeholder="Exercise" id="_field"/>
+              <input type="text" placeholder="Exercise" id="_field"/> -->
+
+
+              <!-- <img src="img/test.jpg" onclick="toexercise1()" height=160 width=228> -->
+
+              <button onclick="saveprofile()">Save</button>
+         </div>
+
+         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js"></script>
+         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-database.js"></script>
+         <script>
+         var firebaseConfig = {
+              apiKey: "AIzaSyDedSAHGDBOqZTne15ZESnDADBlD3p2PnU",
+              authDomain: "secondwind-android-7708e.firebaseapp.com",
+              databaseURL: "https://secondwind-android-7708e.firebaseio.com",
+              projectId: "secondwind-android-7708e",
+              storageBucket: "secondwind-android-7708e.appspot.com",
+              messagingSenderId: "1015199228918",
+              appId: "1:1015199228918:web:ac4144564613bf322addd7"
+            };
+         
+            firebase.initializeApp(firebaseConfig);
+         </script> 
+         <script src="js/index.js"></script>
+         <script>
+            firebase.auth().onAuthStateChanged(function(user) {
+                 if (user==false) {
+                      window.location.href = "signin.html";
+                 } 
+            });
+         </script>
+         <script>
+          //check if user logged in
+            if (sessionStorage.getItem('status') != null){ 
+                //means user has logged in
+            }else{
+                logout();
+                window.alert("You are not logged in")}
+        </script>
+
+    </body>
+</html>
